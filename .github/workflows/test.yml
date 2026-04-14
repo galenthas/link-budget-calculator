@@ -1,0 +1,23 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install MinGW-w64
+        run: choco install mingw --no-progress -y
+
+      - name: Build test binary
+        run: gcc -Wall -Wextra -std=c11 -O2 linkbudget_core.c test_linkbudget.c -o test_linkbudget -lm
+        shell: cmd
+
+      - name: Run tests
+        run: test_linkbudget.exe
+        shell: cmd
