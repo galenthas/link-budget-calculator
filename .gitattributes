@@ -1,0 +1,9 @@
+* text=auto
+*.c text eol=lf
+*.h text eol=lf
+*.rc text eol=lf
+*.md text eol=lf
+Makefile text eol=lf
+*.ico binary
+*.png binary
+*.exe binary
