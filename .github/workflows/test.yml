@@ -86,7 +86,7 @@ jobs:
       - name: Build installer
         run: |
           choco install innosetup --no-progress -y
-          iscc installer.iss
+          iscc /DMyAppVersion=${{ github.ref_name }} installer.iss
         shell: cmd
 
       - name: Create GitHub Release

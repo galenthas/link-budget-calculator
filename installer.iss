@@ -1,5 +1,11 @@
+; Version is passed in from the build system:
+;   iscc /DMyAppVersion=1.1.0 installer.iss
+; If not provided, falls back to the value below.
+#ifndef MyAppVersion
+  #define MyAppVersion "1.1.0"
+#endif
+
 #define MyAppName      "Link Budget Calculator"
-#define MyAppVersion   "1.0.3"
 #define MyAppPublisher "Savronik"
 #define MyAppExeName   "Link Budget Calculator.exe"
 
@@ -29,9 +35,9 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "Link Budget Calculator.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
-Name: "{group}\{#MyAppName}";       Filename: "{app}\{#MyAppExeName}"
+Name: "{group}\{#MyAppName}";           Filename: "{app}\{#MyAppExeName}"
 Name: "{group}\Uninstall {#MyAppName}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{commondesktop}\{#MyAppName}";   Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
