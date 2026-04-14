@@ -2,6 +2,7 @@
 
 A native Win32 RF/satellite link budget calculator with a dark-theme GUI, built in C.
 
+![Tests](https://github.com/galenthas/link-budget-calculator/actions/workflows/test.yml/badge.svg)
 ![Platform](https://img.shields.io/badge/platform-Windows-blue)
 ![Language](https://img.shields.io/badge/language-C11-lightgrey)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -19,9 +20,9 @@ A native Win32 RF/satellite link budget calculator with a dark-theme GUI, built 
 - **PDF report** — direct PDF 1.4 output, no printer required
 - **133 unit tests** — full coverage of the physics engine
 
-## Screenshots
+## Screenshot
 
-> _Coming soon_
+![Link Budget Calculator](screenshot.png)
 
 ## Build
 
