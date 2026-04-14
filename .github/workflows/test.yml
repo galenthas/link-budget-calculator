@@ -83,8 +83,16 @@ jobs:
             -o "Link Budget Calculator.exe" -lcomctl32 -lcomdlg32 -mwindows -lm
         shell: cmd
 
+      - name: Build installer
+        run: |
+          choco install innosetup --no-progress -y
+          iscc installer.iss
+        shell: cmd
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
-          files: "Link Budget Calculator.exe"
+          files: |
+            Link Budget Calculator.exe
+            installer_out\*.exe
           generate_release_notes: true

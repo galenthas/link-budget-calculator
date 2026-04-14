@@ -159,6 +159,14 @@ lb_geometry_t lb_geometry_angles(double tx_alt_km, double rx_alt_km,
 double lb_compute_slant_range_km(double tx_alt_km, double rx_alt_km,
                                   double radius_factor);
 
+/**
+ * Slant range from horizontal distance and node altitudes (km).
+ * Uses planar approximation: slant = sqrt(d_horiz² + Δh²), min 0.001 km.
+ * d_horiz_km: horizontal ground distance (km).
+ */
+double lb_slant_from_horiz_km(double d_horiz_km,
+                               double tx_alt_km, double rx_alt_km);
+
 /** EIRP = P_sat - OBO - L_feed + G_tx  (all dB). */
 double lb_eirp_dBW(double sat_power_dBW, double obo_dB,
                    double feed_loss_dB, double tx_ant_gain_dBi);

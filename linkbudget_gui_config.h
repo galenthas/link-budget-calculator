@@ -74,6 +74,7 @@
 #define ID_BTN_SWEEP  4
 #define ID_BTN_EXPORT 5
 #define ID_BTN_PRINT  6
+#define ID_BTN_ABOUT  7
 /* Clickable unit IDs */
 #define ID_UNIT_FREQ    400
 #define ID_UNIT_TXALT   401

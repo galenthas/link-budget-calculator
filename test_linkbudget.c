@@ -256,6 +256,48 @@ static void test_slant_range(void)
 }
 
 /* -------------------------------------------------------------------------
+ * lb_slant_from_horiz_km tests
+ * ---------------------------------------------------------------------- */
+
+static void test_slant_from_horiz(void)
+{
+    /* Pure horizontal (same altitude): slant == horiz distance */
+    ASSERT_NEAR(lb_slant_from_horiz_km(100.0, 50.0, 50.0), 100.0, 1e-9,
+                "horiz_same_alt");
+
+    /* Zero horizontal distance, altitude difference only: slant == |Δh| */
+    ASSERT_NEAR(lb_slant_from_horiz_km(0.0, 200.0, 100.0), 100.0, 1e-9,
+                "horiz_zero_dist");
+
+    /* 3-4-5 right triangle: d=3, Δh=4 → slant=5 */
+    ASSERT_NEAR(lb_slant_from_horiz_km(3.0, 4.0, 0.0), 5.0, 1e-9,
+                "horiz_345_triangle");
+
+    /* Symmetry: tx/rx swap gives same result */
+    ASSERT_NEAR(lb_slant_from_horiz_km(3.0, 0.0, 4.0), 5.0, 1e-9,
+                "horiz_345_triangle_swapped");
+
+    /* Minimum clamp: zero horiz, same altitude → 0.001 km */
+    ASSERT_NEAR(lb_slant_from_horiz_km(0.0, 100.0, 100.0), 0.001, 1e-9,
+                "horiz_minimum_clamp");
+
+    /* Slant always >= horiz distance */
+    ASSERT_TRUE(lb_slant_from_horiz_km(50.0, 200.0, 100.0) >= 50.0,
+                "horiz_slant_gte_horiz");
+
+    /* More horizontal distance → more slant range */
+    ASSERT_TRUE(lb_slant_from_horiz_km(200.0, 100.0, 0.0) >
+                lb_slant_from_horiz_km(100.0, 100.0, 0.0),
+                "horiz_monotone");
+
+    /* Consistent with lb_run: passing computed slant into lb_run gives same
+     * result as if we had derived it manually */
+    double slant = lb_slant_from_horiz_km(150.0, 10.0, 1.0);
+    ASSERT_NEAR(slant, sqrt(150.0*150.0 + 9.0*9.0), 1e-9,
+                "horiz_formula_check");
+}
+
+/* -------------------------------------------------------------------------
  * Required Eb/N0 tests
  * ---------------------------------------------------------------------- */
 
@@ -810,6 +852,7 @@ int main(void)
     test_rx_ant_beamwidth();
     test_geometry();
     test_slant_range();
+    test_slant_from_horiz();
     test_required_ebn0();
     test_pol_loss();
     test_run_link_budget();

@@ -301,12 +301,8 @@ int fill_params(lb_params_t *p)
 
     int from_dist = (get_combo_index(h_range_mode) == RANGE_MODE_HORIZ);
     if (from_dist) {
-        /* Horiz. Distance mode: derive slant range as hypotenuse of horizontal
-         * distance and altitude difference (planar approximation) */
-        double d  = get_double(h_horiz_dist);
-        double dh = fabs(p->tx_alt_km - p->rx_alt_km);
-        p->slant_range_km = sqrt(d*d + dh*dh);
-        if (p->slant_range_km < 0.001) p->slant_range_km = 0.001; /* minimum 1 m */
+        double d = get_double(h_horiz_dist);
+        p->slant_range_km = lb_slant_from_horiz_km(d, p->tx_alt_km, p->rx_alt_km);
     } else {
         p->slant_range_km = get_double(h_slant);
     }

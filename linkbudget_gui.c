@@ -133,7 +133,7 @@ HWND h_unit_freq, h_unit_txalt, h_unit_rxalt, h_unit_satpow;
 HWND h_unit_feedpow, h_unit_rxpow, h_unit_minalt, h_unit_eirp;
 
 /* Utility button HWNDs */
-HWND h_btn_save, h_btn_load, h_btn_sweep, h_btn_export, h_btn_print;
+HWND h_btn_save, h_btn_load, h_btn_sweep, h_btn_export, h_btn_print, h_btn_about;
 
 /* Sec 6 — path loss model + ITU-R fields */
 HWND h_loss_mode;
@@ -675,7 +675,8 @@ static BOOL on_drawitem_btn(LPARAM lParam)
     case ID_BTN_LOAD:   txt = "Load";       goto util_btn;
     case ID_BTN_SWEEP:  txt = "Sweep";      goto util_btn;
     case ID_BTN_EXPORT: txt = "Export";     goto util_btn;
-    case ID_BTN_PRINT:  txt = "PDF Report";
+    case ID_BTN_PRINT:  txt = "PDF Report"; goto util_btn;
+    case ID_BTN_ABOUT:  txt = "?";
     util_btn: /* shared styling for all utility buttons */
         bg  = sel ? RGB(0x4A,0x5A,0x6A) : RGB(0x35,0x3D,0x4A);
         break;
@@ -700,6 +701,34 @@ static BOOL on_drawitem_btn(LPARAM lParam)
     DrawText(hdc, txt, -1, &rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
     SelectObject(hdc, old);
     return TRUE;
+}
+
+/* ============================================================
+ * About dialog
+ * ============================================================ */
+static void show_about(void)
+{
+    char msg[512];
+    snprintf(msg, sizeof(msg),
+        APP_NAME "\n"
+        "Version " VERSION_STRING "\n"
+        "Built " __DATE__ "\n"
+        "\n"
+        "RF/Satellite Link Budget Calculator\n"
+        "\n"
+        "Physics models:\n"
+        "  \x95 ITU-R P.676-12 (Gaseous attenuation)\n"
+        "  \x95 ITU-R P.838-3  (Rain attenuation)\n"
+        "\n"
+        "Keyboard shortcuts:\n"
+        "  F5        Recalculate\n"
+        "  Ctrl+S    Save scenario\n"
+        "  Ctrl+O    Load scenario\n"
+        "  Ctrl+E    Export CSV\n"
+        "  Ctrl+P    PDF Report\n"
+        "  Ctrl+W    Sweep plot"
+    );
+    MessageBoxA(g_hwnd, msg, "About " APP_NAME, MB_OK | MB_ICONINFORMATION);
 }
 
 /* ============================================================
@@ -748,8 +777,21 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg,
         case ID_BTN_SWEEP:  if (HIWORD(wParam)==BN_CLICKED) open_sweep_wnd(); break;
         case ID_BTN_EXPORT: if (HIWORD(wParam)==BN_CLICKED) export_csv();     break;
         case ID_BTN_PRINT:  if (HIWORD(wParam)==BN_CLICKED) print_report();   break;
+        case ID_BTN_ABOUT:  if (HIWORD(wParam)==BN_CLICKED) show_about();    break;
         }
         return 0;
+
+    case WM_KEYDOWN: {
+        /* Global keyboard shortcuts — active whenever the main window has focus */
+        BOOL ctrl = (GetKeyState(VK_CONTROL) & 0x8000) != 0;
+        if (wParam == VK_F5)                  { do_calculate();   return 0; }
+        if (ctrl && wParam == 'S')            { save_scenario();  return 0; }
+        if (ctrl && wParam == 'O')            { load_scenario();  return 0; }
+        if (ctrl && wParam == 'E')            { export_csv();     return 0; }
+        if (ctrl && wParam == 'P')            { print_report();   return 0; }
+        if (ctrl && wParam == 'W')            { open_sweep_wnd(); return 0; }
+        break;
+    }
 
     case WM_USER+1:
         /* Posted by SectionPanelProc whenever any input changes (EN_CHANGE,

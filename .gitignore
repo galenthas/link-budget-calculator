@@ -1,3 +1,4 @@
 .claude/
 *.exe
 *.res
+installer_out/

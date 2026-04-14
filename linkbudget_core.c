@@ -151,6 +151,15 @@ lb_geometry_t lb_geometry_angles(double tx_alt_km, double rx_alt_km,
     return geo;
 }
 
+double lb_slant_from_horiz_km(double d_horiz_km,
+                               double tx_alt_km, double rx_alt_km)
+{
+    /* Planar approximation: hypotenuse of horizontal distance and altitude difference */
+    double dh     = fabs(tx_alt_km - rx_alt_km);
+    double slant  = sqrt(d_horiz_km * d_horiz_km + dh * dh);
+    return slant < 0.001 ? 0.001 : slant; /* minimum 1 m */
+}
+
 double lb_eirp_dBW(double sat_power_dBW, double obo_dB,
                    double feed_loss_dB, double tx_ant_gain_dBi)
 {

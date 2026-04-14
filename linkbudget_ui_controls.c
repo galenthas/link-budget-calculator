@@ -76,7 +76,7 @@ extern HWND h_cv_gasatt_lbl, h_cv_gasatt_unit;
 extern HWND h_cv_rainatt_lbl, h_cv_rainatt_unit;
 
 /* Utility button HWNDs */
-extern HWND h_btn_save, h_btn_load, h_btn_sweep, h_btn_export, h_btn_print;
+extern HWND h_btn_save, h_btn_load, h_btn_sweep, h_btn_export, h_btn_print, h_btn_about;
 
 /* String name tables (defined in linkbudget_gui.c) */
 extern const char *FEC_NAMES[];
@@ -757,4 +757,7 @@ void build_button(void)
     h_btn_sweep  = mk_obtn("Sweep",  WIN_W-MARGIN_X-3*sw-8,   BTN_Y, sw, sh, ID_BTN_SWEEP);
     h_btn_export = mk_obtn("Export", WIN_W-MARGIN_X-2*sw-4,   BTN_Y, sw, sh, ID_BTN_EXPORT);
     h_btn_print  = mk_obtn("Print",  WIN_W-MARGIN_X-sw,       BTN_Y, sw, sh, ID_BTN_PRINT);
+
+    /* About button: top-right corner of the banner */
+    h_btn_about = mk_obtn("?", WIN_W - 28, 4, 20, BANNER_H - 8, ID_BTN_ABOUT);
 }
