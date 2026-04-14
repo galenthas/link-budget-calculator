@@ -3,13 +3,13 @@
 
 #define VERSION_MAJOR 1
 #define VERSION_MINOR 1
-#define VERSION_PATCH 0
+#define VERSION_PATCH 1
 
 /* Comma-separated form for VERSIONINFO resource */
-#define VERSION_COMMAS  1,1,0,0
+#define VERSION_COMMAS  1,1,1,0
 
 /* Human-readable string */
-#define VERSION_STRING  "1.1.0"
+#define VERSION_STRING  "1.1.1"
 
 /* Window title and banner label */
 #define APP_NAME        "Link Budget Calculator"

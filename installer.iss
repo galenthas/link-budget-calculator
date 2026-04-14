@@ -2,7 +2,7 @@
 ;   iscc /DMyAppVersion=1.1.0 installer.iss
 ; If not provided, falls back to the value below.
 #ifndef MyAppVersion
-  #define MyAppVersion "1.1.0"
+  #define MyAppVersion "1.1.1"
 #endif
 
 #define MyAppName      "Link Budget Calculator"
