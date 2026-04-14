@@ -11,7 +11,15 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      - name: Cache MinGW
+        id: cache-mingw
+        uses: actions/cache@v4
+        with:
+          path: C:\ProgramData\chocolatey\lib\mingw
+          key: mingw-${{ runner.os }}-13
+
       - name: Install MinGW-w64
+        if: steps.cache-mingw.outputs.cache-hit != 'true'
         run: choco install mingw --no-progress -y
 
       - name: Build test binary
@@ -19,5 +27,64 @@ jobs:
         shell: cmd
 
       - name: Run tests
-        run: test_linkbudget.exe
+        id: run-tests
+        run: test_linkbudget.exe 2>&1 | tee test_output.txt
         shell: cmd
+
+      - name: Write job summary
+        if: always()
+        shell: bash
+        run: |
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat test_output.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Build GUI
+        run: |
+          windres app.rc -O coff -o app.res
+          gcc -Wall -Wextra -std=c11 -O2 ^
+            linkbudget_gui.c linkbudget_ui_controls.c linkbudget_ui_logic.c ^
+            linkbudget_ui_io.c linkbudget_pdf.c linkbudget_core.c app.res ^
+            -o "Link Budget Calculator.exe" -lcomctl32 -lcomdlg32 -mwindows -lm
+        shell: cmd
+
+      - name: Upload GUI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Link Budget Calculator
+          path: "Link Budget Calculator.exe"
+
+  release:
+    needs: test
+    runs-on: windows-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Cache MinGW
+        id: cache-mingw
+        uses: actions/cache@v4
+        with:
+          path: C:\ProgramData\chocolatey\lib\mingw
+          key: mingw-${{ runner.os }}-13
+
+      - name: Install MinGW-w64
+        if: steps.cache-mingw.outputs.cache-hit != 'true'
+        run: choco install mingw --no-progress -y
+
+      - name: Build release executable
+        run: |
+          windres app.rc -O coff -o app.res
+          gcc -Wall -Wextra -std=c11 -O2 ^
+            linkbudget_gui.c linkbudget_ui_controls.c linkbudget_ui_logic.c ^
+            linkbudget_ui_io.c linkbudget_pdf.c linkbudget_core.c app.res ^
+            -o "Link Budget Calculator.exe" -lcomctl32 -lcomdlg32 -mwindows -lm
+        shell: cmd
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "Link Budget Calculator.exe"
+          generate_release_notes: true
