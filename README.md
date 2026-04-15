@@ -6,7 +6,7 @@ A native Win32 RF/satellite link budget calculator with a dark-theme GUI, built 
 ![Platform](https://img.shields.io/badge/platform-Windows-blue)
 ![Language](https://img.shields.io/badge/language-C11-lightgrey)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Version](https://img.shields.io/badge/version-1.1.1-informational)
+![Version](https://img.shields.io/github/v/release/galenthas/link-budget-calculator)
 
 ## Screenshot
 
