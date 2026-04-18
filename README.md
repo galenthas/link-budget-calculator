@@ -1,16 +1,36 @@
-# Link Budget Calculator
+# Link Budget Calculator — Free Windows RF & Satellite Link Budget Tool
 
-A native Win32 RF/satellite link budget calculator with a dark-theme GUI, built in C.
+A free, open-source Windows GUI for RF and satellite link budget analysis. Calculate free-space path loss (FSPL), EIRP, C/N0, Eb/N0, and link margin with ITU-R atmospheric attenuation models — no MATLAB or spreadsheet required. Built as a lightweight native Win32 application in C.
 
 ![Tests](https://github.com/galenthas/link-budget-calculator/actions/workflows/test.yml/badge.svg)
-![Platform](https://img.shields.io/badge/platform-Windows-blue)
+![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-blue)
 ![Language](https://img.shields.io/badge/language-C11-lightgrey)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Version](https://img.shields.io/github/v/release/galenthas/link-budget-calculator)
 
 ## Screenshot
 
-![Link Budget Calculator](screenshot.png)
+![Link Budget Calculator — RF satellite link budget GUI for Windows](screenshot.png)
+
+## Use Cases
+
+- **Satellite link budget** — compute end-to-end C/N0 and Eb/N0 for LEO, MEO, or GEO satellite links with rain and gaseous attenuation
+- **RF link design** — size antennas, select transmit power, and verify link margin for point-to-point microwave or telemetry links
+- **Classroom / self-study** — learn how FSPL, antenna gain, noise temperature, and modulation interact in a real link budget
+- **Quick trade studies** — sweep any parameter (frequency, distance, antenna diameter, rain rate) and find the zero-margin crossing instantly
+
+## Features
+
+- **8-section input panel** — frequency, modulation/coding, geometry, transmitter, TX antenna, path loss, RX antenna, RX system noise
+- **Antenna modes** — direct gain input or parabolic dish (auto-computes gain and beamwidth)
+- **Geometry modes** — slant range or horizontal distance with altitude
+- **Path loss models** — simple FSPL (Friis transmission equation) or ITU-R (P.676-12 gaseous + P.838-3 rain attenuation)
+- **Clickable unit cycling** — frequency (GHz/MHz/kHz), altitude (m/ft/km/NM), power (W/dBm/dBW)
+- **Sweep plot** — margin vs. any parameter with zero-crossing detection and interactive crosshair
+- **Save / Load** — `.lbf` scenario files for repeatable analysis
+- **CSV export** — all inputs and computed results
+- **PDF report** — direct PDF 1.4 output, no printer driver required
+- **Portable** — single `.exe`, no installation needed
 
 ## Installation
 
@@ -19,18 +39,51 @@ Download the latest release from the [Releases page](https://github.com/galentha
 - **`LinkBudgetCalculator_vX.X.X_Setup.exe`** — Windows installer (no admin rights required)
 - **`Link Budget Calculator.exe`** — portable, runs without installation
 
-## Features
+## How It Works
 
-- **8-section input panel** — frequency, modulation/coding, geometry, transmitter, TX antenna, path loss, RX antenna, RX system noise
-- **Antenna modes** — direct gain input or parabolic dish (auto-computes gain and beamwidth)
-- **Geometry modes** — slant range or horizontal distance
-- **Path loss models** — Simple FSPL or ITU-R (P.676-12 gaseous + P.838-3 rain attenuation)
-- **Clickable unit cycling** — frequency (GHz/MHz/kHz), altitude (m/ft/km/NM), power (W/dBm/dBW)
-- **Sweep plot** — margin vs. any parameter with zero-crossing detection and interactive crosshair
-- **Save / Load** — `.lbf` scenario files
-- **CSV export** — all inputs and computed results
-- **PDF report** — direct PDF 1.4 output, no printer required
-- **About dialog** — version info, physics model references, keyboard shortcuts
+The calculator implements the standard RF link budget equation:
+
+**Link Margin = EIRP - Path Loss + G/T - Required Eb/N0 - Implementation Loss**
+
+All intermediate values (EIRP, free-space path loss, atmospheric attenuation, antenna gain, system noise temperature, C/N0, Eb/N0) are computed and displayed. When ITU-R mode is selected, oxygen and water vapour attenuation follow ITU-R P.676-12 Annex 2, and rain attenuation follows ITU-R P.838-3. The sweep plot varies one parameter while holding everything else constant, plotting margin and marking the exact zero-crossing point.
+
+## FAQ
+
+### What is a link budget?
+
+A link budget is an accounting of all gains and losses in a radio communication system — from transmitter power through antenna gains, path loss, and receiver sensitivity — to determine whether a signal arrives with enough strength to be decoded. Link Budget Calculator automates this calculation with a graphical interface.
+
+### Does it support satellite link budgets?
+
+Yes. You can enter slant range or horizontal distance with altitude, choose between FSPL and ITU-R atmospheric models (oxygen, water vapour, rain), and compute C/N0 and Eb/N0 for any orbit — LEO, MEO, or GEO.
+
+### What path loss models are included?
+
+Two models: simple free-space path loss (Friis equation) and ITU-R extended mode with gaseous attenuation (P.676-12 Annex 2) plus rain attenuation (P.838-3).
+
+### Do I need MATLAB or Excel?
+
+No. Link Budget Calculator is a standalone Windows application. There is no dependency on MATLAB, Python, or spreadsheet software.
+
+### Can I generate a report?
+
+Yes. The calculator exports PDF reports (direct PDF 1.4 generation, no print driver needed) and CSV files with all inputs and computed results.
+
+### Is it free?
+
+Yes. MIT licensed — free for personal, educational, and commercial use.
+
+## Alternatives
+
+| Tool | GUI | Free | Offline | Sweep Plot | Standards |
+|---|---|---|---|---|---|
+| **Link Budget Calculator** | Native Win32 | Yes (MIT) | Yes | Yes | ITU-R P.676, P.838 |
+| MATLAB link budget scripts | No (scripts) | No | Yes | Manual | Varies |
+| Excel spreadsheets | Spreadsheet | Varies | Yes | Manual | Varies |
+| SatNOGS | Web | Yes | No | No | Basic FSPL |
+| Pathloss 5 | Yes | No (commercial) | Yes | Yes | ITU-R full suite |
+
+Link Budget Calculator is the only free, offline, native GUI tool that includes ITU-R atmospheric and rain attenuation models with a built-in parameter sweep plot.
 
 ## Keyboard Shortcuts
 
